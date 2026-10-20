@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="UG logo">
+  <rect width="32" height="64" fill="#0b0b0b"/>
+  <rect x="32" width="32" height="64" fill="#f7f7f4"/>
+  <text x="16" y="42" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" text-anchor="middle">U</text>
+  <text x="48" y="42" fill="#0b0b0b" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" text-anchor="middle">G</text>
+</svg>
