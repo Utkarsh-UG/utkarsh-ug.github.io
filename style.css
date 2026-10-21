@@ -140,7 +140,10 @@ body{min-width:320px}
 .activity-cell[data-level="1"]{background:#0e6b2d}.activity-cell[data-level="2"]{background:#12953c}.activity-cell[data-level="3"]{background:#27c653}.activity-cell[data-level="4"]{background:#5ee879}
 .leetcode-link-card{color:var(--text);min-height:270px;flex-direction:column;align-items:flex-start;gap:16px;display:flex;transition:transform .3s,box-shadow .3s}
 .leetcode-link-card:hover{box-shadow:var(--shadow);transform:translateY(-5px)}
-.leetcode-mark{color:var(--bg);background:var(--text);border-radius:10px;padding:10px 8px;font:700 12px "DM Mono"}
+.leetcode-mark{color:var(--bg);background:var(--text);border-radius:12px;width:42px;height:42px;place-items:center;display:grid}
+.leetcode-mark svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.55}
+.github-mark{color:#fff;background:#24292f}
+.github-mark svg{fill:currentColor;stroke:none}
 .leetcode-link-label{color:var(--muted);text-transform:uppercase;letter-spacing:.14em;font:10px "DM Mono"}
 .leetcode-link-card strong{letter-spacing:-.05em;margin-top:auto;font-size:28px;line-height:1}
 .leetcode-link-card strong em{color:var(--accent);font-family:"DM Mono";font-size:17px;font-style:normal}
