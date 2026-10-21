@@ -135,18 +135,22 @@ const loadActivity = (gridId, file, prefix, noun) => {
       }
       const currentYear = new Date().getFullYear();
       const calendars = data.calendars || { [currentYear]: data.submissionCalendar || {} };
-      const yearButtons = document.querySelectorAll(".github-years button");
+      const yearSelect = document.getElementById("github-year");
       const renderYear = (year) => {
         const calendar = calendars[year] || {};
         renderActivity(grid, calendar, prefix, noun, Number(year));
-        yearButtons.forEach((button) => {
-          button.classList.toggle("active", button.dataset.year === year);
-        });
+        if (yearSelect) yearSelect.value = year;
       };
-      yearButtons.forEach((button) => {
-        button.dataset.year = button.textContent.trim();
-        button.addEventListener("click", () => renderYear(button.dataset.year));
-      });
+      if (yearSelect) {
+        yearSelect.replaceChildren();
+        Object.keys(calendars).sort((a, b) => b - a).forEach((year) => {
+          const option = document.createElement("option");
+          option.value = year;
+          option.textContent = year;
+          yearSelect.appendChild(option);
+        });
+        yearSelect.addEventListener("change", () => renderYear(yearSelect.value));
+      }
       const defaultYear = Object.keys(calendars).sort().pop() || String(currentYear);
       renderYear(defaultYear);
     })
