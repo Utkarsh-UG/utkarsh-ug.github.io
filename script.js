@@ -50,9 +50,8 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
 
-const leetcodeGrid = document.getElementById("leetcode-grid");
-if (leetcodeGrid) {
-  const renderLeetCodeActivity = (submissionCalendar) => {
+const renderActivity = (grid, submissionCalendar, prefix, noun) => {
+  if (grid) {
     const today = new Date();
     const end = new Date(today);
     end.setHours(12, 0, 0, 0);
@@ -67,7 +66,7 @@ if (leetcodeGrid) {
     let maxStreak = 0;
     const months = new Map();
 
-    leetcodeGrid.replaceChildren();
+    grid.replaceChildren();
     for (let date = new Date(firstSunday); date <= end; date.setDate(date.getDate() + 1)) {
       const dateKey = [
         date.getFullYear(),
@@ -88,19 +87,19 @@ if (leetcodeGrid) {
       const level = count === 0 ? 0 : count === 1 ? 1 : count <= 3 ? 2 : count <= 6 ? 3 : 4;
       cell.className = "activity-cell";
       cell.dataset.level = String(level);
-      cell.title = `${count} submission${count === 1 ? "" : "s"} on ${date.toLocaleDateString()}`;
+      cell.title = `${count} ${noun}${count === 1 ? "" : "s"} on ${date.toLocaleDateString()}`;
       cell.setAttribute("aria-hidden", "true");
-      leetcodeGrid.appendChild(cell);
+      grid.appendChild(cell);
     }
 
-    const totalElement = document.getElementById("leetcode-total");
-    const activeDaysElement = document.getElementById("leetcode-active-days");
-    const maxStreakElement = document.getElementById("leetcode-max-streak");
+    const totalElement = document.getElementById(`${prefix}-total`);
+    const activeDaysElement = document.getElementById(`${prefix}-active-days`);
+    const maxStreakElement = document.getElementById(`${prefix}-max-streak`);
     if (totalElement) totalElement.firstChild.textContent = `${total} `;
     if (activeDaysElement) activeDaysElement.textContent = String(activeDays);
     if (maxStreakElement) maxStreakElement.textContent = String(maxStreak);
 
-    const monthLabels = document.querySelector(".activity-months");
+    const monthLabels = grid.closest(".leetcode-activity").querySelector(".activity-months");
     if (monthLabels) {
       monthLabels.replaceChildren();
       months.forEach((label) => {
@@ -109,16 +108,23 @@ if (leetcodeGrid) {
         monthLabels.appendChild(month);
       });
     }
-  };
+  }
+};
 
-  fetch("data/leetcode.json", { cache: "no-cache" })
+const loadActivity = (gridId, file, prefix, noun) => {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  fetch(`data/${file}`, { cache: "no-cache" })
     .then((response) => {
-      if (!response.ok) throw new Error(`LeetCode activity request failed: ${response.status}`);
+      if (!response.ok) throw new Error(`${prefix} activity request failed: ${response.status}`);
       return response.json();
     })
-    .then((data) => renderLeetCodeActivity(data.submissionCalendar || {}))
+    .then((data) => renderActivity(grid, data.submissionCalendar || {}, prefix, noun))
     .catch((error) => {
-      console.error("Unable to load LeetCode activity.", error);
-      renderLeetCodeActivity({});
+      console.error(`Unable to load ${prefix} activity.`, error);
+      renderActivity(grid, {}, prefix, noun);
     });
-}
+};
+
+loadActivity("leetcode-grid", "leetcode.json", "leetcode", "submission");
+loadActivity("github-grid", "github.json", "github", "contribution");

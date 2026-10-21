@@ -145,5 +145,7 @@ body{min-width:320px}
 .leetcode-link-card strong{letter-spacing:-.05em;margin-top:auto;font-size:28px;line-height:1}
 .leetcode-link-card strong em{color:var(--accent);font-family:"DM Mono";font-size:17px;font-style:normal}
 .leetcode-link-card small{color:var(--muted);font-size:12px;line-height:1.6}
+.github-activity-row{margin-top:28px}
+.github-mark{background:#24292f;color:#fff}
 @media (max-width:900px){.leetcode-grid{grid-template-columns:1fr}.leetcode-link-card{min-height:230px}}
 @media (max-width:560px){.leetcode-section{padding-top:0}.leetcode-activity,.leetcode-link-card{padding:14px;border-radius:8px}.activity-summary{align-items:flex-start;flex-direction:column;gap:12px}.activity-summary>strong{font-size:15px}.activity-summary>strong span{font-size:11px}.activity-stats{gap:10px;font-size:8px}.activity-grid{gap:3px}.activity-months{margin-left:32px;font-size:8px}.activity-months span:nth-child(even){visibility:hidden}.leetcode-link-card strong{font-size:25px}}
