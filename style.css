@@ -123,7 +123,7 @@ body{min-width:320px}
 
 .leetcode-section{padding-top:30px}
 .leetcode-grid{grid-template-columns:minmax(0,1.7fr) minmax(260px,.8fr);gap:28px;display:grid}
-.leetcode-activity{border:1px solid #ffffff0d;border-radius:3px;background:#252525;padding:16px 10px 13px;color:#c9c9c9;overflow:hidden}
+.leetcode-activity{border:1px solid #ffffff18;border-radius:22px;background:linear-gradient(145deg,#ffffff12,#ffffff05),#252525;padding:20px 14px 16px;color:#c9c9c9;overflow:hidden;box-shadow:inset 0 1px #ffffff1c,0 20px 55px #00000018}
 .leetcode-link-card{border:1px solid color-mix(in srgb,var(--text) 13%,transparent);border-radius:24px;background:color-mix(in srgb,var(--surface) 58%,transparent);backdrop-filter:blur(18px) saturate(120%);-webkit-backdrop-filter:blur(18px) saturate(120%);box-shadow:inset 0 1px #ffffff45;padding:28px}
 .activity-summary{justify-content:space-between;align-items:center;gap:20px;display:flex;padding:0 0 13px}
 .activity-summary>strong{color:#f0f0f0;font:700 18px Manrope;white-space:nowrap}
@@ -136,7 +136,7 @@ body{min-width:320px}
 .activity-body{display:flex;gap:10px}
 .activity-days{color:#888;flex:0 0 24px;flex-direction:column;justify-content:space-around;padding:3px 0 2px;font:9px "DM Mono";display:flex}
 .activity-grid{grid-template-rows:repeat(7,1fr);grid-auto-flow:column;grid-auto-columns:minmax(8px,1fr);gap:4px;width:100%;display:grid}
-.activity-cell{aspect-ratio:1;border-radius:2px;background:#3b3b3b}
+.activity-cell{aspect-ratio:1;border-radius:3px;background:#3b3b3b;box-shadow:inset 0 1px #ffffff08}
 .activity-cell[data-level="1"]{background:#0e6b2d}.activity-cell[data-level="2"]{background:#12953c}.activity-cell[data-level="3"]{background:#27c653}.activity-cell[data-level="4"]{background:#5ee879}
 .leetcode-link-card{color:var(--text);min-height:270px;flex-direction:column;align-items:flex-start;gap:16px;display:flex;transition:transform .3s,box-shadow .3s}
 .leetcode-link-card:hover{box-shadow:var(--shadow);transform:translateY(-5px)}

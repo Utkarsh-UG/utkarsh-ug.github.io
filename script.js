@@ -69,9 +69,12 @@ if (leetcodeGrid) {
 
     leetcodeGrid.replaceChildren();
     for (let date = new Date(firstSunday); date <= end; date.setDate(date.getDate() + 1)) {
-      const timestamp = Math.floor(date.getTime() / 1000);
-      const count = Number(submissionCalendar[String(timestamp)] || 0);
-      const dateKey = date.toISOString().slice(0, 10);
+      const dateKey = [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0")
+      ].join("-");
+      const count = Number(submissionCalendar[dateKey] || 0);
       total += count;
       activeDays += count > 0 ? 1 : 0;
       if (count > 0) {

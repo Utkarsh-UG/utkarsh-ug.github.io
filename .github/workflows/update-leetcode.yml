@@ -2,7 +2,7 @@ name: Update LeetCode activity
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "17 2 * * *"
   workflow_dispatch:
   push:
     paths:
@@ -44,11 +44,15 @@ jobs:
           )
           with urllib.request.urlopen(request, timeout=30) as response:
               payload = json.load(response)
-          calendar = payload["data"]["matchedUser"]["submissionCalendar"]
+          calendar = json.loads(payload["data"]["matchedUser"]["submissionCalendar"] or "{}")
+          normalized_calendar = {
+              datetime.fromtimestamp(int(timestamp), timezone.utc).date().isoformat(): count
+              for timestamp, count in calendar.items()
+          }
           output = {
               "username": os.environ["LEETCODE_USERNAME"],
               "updatedAt": datetime.now(timezone.utc).isoformat(),
-              "submissionCalendar": json.loads(calendar or "{}")
+              "submissionCalendar": normalized_calendar
           }
           with open("data/leetcode.json", "w", encoding="utf-8") as file:
               json.dump(output, file, indent=2)
