@@ -96,23 +96,32 @@ jobs:
                       self.reading_tooltip = False
                       self.current_date = None
 
-          end = datetime.now(timezone.utc).date()
-          start = end - timedelta(days=365)
-          url = (
-              f"https://github.com/users/{os.environ['GITHUB_USERNAME']}/contributions"
-              f"?from={start.isoformat()}&to={end.isoformat()}"
-          )
-          request = urllib.request.Request(url, headers={"User-Agent": "portfolio-activity-updater"})
-          with urllib.request.urlopen(request, timeout=30) as response:
-              markup = response.read().decode("utf-8")
-          parser = ContributionParser()
-          parser.feed(markup)
-          if not parser.calendar:
-              raise RuntimeError("GitHub contribution calendar was not found")
+          def fetch_year(year):
+              start = datetime(year, 1, 1, tzinfo=timezone.utc).date()
+              end = datetime(year, 12, 31, tzinfo=timezone.utc).date()
+              url = (
+                  f"https://github.com/users/{os.environ['GITHUB_USERNAME']}/contributions"
+                  f"?from={start.isoformat()}&to={end.isoformat()}"
+              )
+              request = urllib.request.Request(url, headers={"User-Agent": "portfolio-activity-updater"})
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  markup = response.read().decode("utf-8")
+              parser = ContributionParser()
+              parser.feed(markup)
+              if not parser.calendar:
+                  raise RuntimeError(f"GitHub contribution calendar was not found for {year}")
+              return parser.calendar
+
+          current_year = datetime.now(timezone.utc).year
+          calendars = {
+              str(year): fetch_year(year)
+              for year in range(current_year - 2, current_year + 1)
+          }
           output = {
               "username": os.environ["GITHUB_USERNAME"],
               "updatedAt": datetime.now(timezone.utc).isoformat(),
-              "submissionCalendar": parser.calendar
+              "submissionCalendar": calendars[str(current_year)],
+              "calendars": calendars
           }
           with open("data/github.json", "w", encoding="utf-8") as file:
               json.dump(output, file, indent=2)

@@ -50,13 +50,12 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
 
-const renderActivity = (grid, submissionCalendar, prefix, noun) => {
+const renderActivity = (grid, submissionCalendar, prefix, noun, year) => {
   if (grid) {
     const today = new Date();
-    const end = new Date(today);
-    end.setHours(12, 0, 0, 0);
-    const start = new Date(end);
-    start.setDate(start.getDate() - 363);
+    const end = year ? new Date(year, 11, 31, 12) : new Date(today.setHours(12, 0, 0, 0));
+    const start = year ? new Date(year, 0, 1, 12) : new Date(end);
+    if (!year) start.setDate(start.getDate() - 363);
     const firstSunday = new Date(start);
     firstSunday.setDate(firstSunday.getDate() - firstSunday.getDay());
 
@@ -82,7 +81,7 @@ const renderActivity = (grid, submissionCalendar, prefix, noun) => {
       } else {
         currentStreak = 0;
       }
-      if (date.getDate() <= 7) months.set(date.getMonth(), date.toLocaleString("en", { month: "short" }));
+      if (date.getDate() <= 7 && (!year || date.getFullYear() === year)) months.set(date.getMonth(), date.toLocaleString("en", { month: "short" }));
       const cell = document.createElement("i");
       const level = count === 0 ? 0 : count === 1 ? 1 : count <= 3 ? 2 : count <= 6 ? 3 : 4;
       cell.className = "activity-cell";
@@ -119,7 +118,28 @@ const loadActivity = (gridId, file, prefix, noun) => {
       if (!response.ok) throw new Error(`${prefix} activity request failed: ${response.status}`);
       return response.json();
     })
-    .then((data) => renderActivity(grid, data.submissionCalendar || {}, prefix, noun))
+    .then((data) => {
+      if (prefix !== "github") {
+        renderActivity(grid, data.submissionCalendar || {}, prefix, noun);
+        return;
+      }
+      const currentYear = new Date().getFullYear();
+      const calendars = data.calendars || { [currentYear]: data.submissionCalendar || {} };
+      const yearButtons = document.querySelectorAll(".github-years button");
+      const renderYear = (year) => {
+        const calendar = calendars[year] || {};
+        renderActivity(grid, calendar, prefix, noun, Number(year));
+        yearButtons.forEach((button) => {
+          button.classList.toggle("active", button.dataset.year === year);
+        });
+      };
+      yearButtons.forEach((button) => {
+        button.dataset.year = button.textContent.trim();
+        button.addEventListener("click", () => renderYear(button.dataset.year));
+      });
+      const defaultYear = Object.keys(calendars).sort().pop() || String(currentYear);
+      renderYear(defaultYear);
+    })
     .catch((error) => {
       console.error(`Unable to load ${prefix} activity.`, error);
       renderActivity(grid, {}, prefix, noun);
