@@ -99,7 +99,6 @@ jobs:
               json.dump(output, file, indent=2)
               file.write("\n")
           PY
-          PY
 
       - name: Commit updated activity
         run: |
