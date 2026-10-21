@@ -150,5 +150,16 @@ body{min-width:320px}
 .leetcode-link-card small{color:var(--muted);font-size:12px;line-height:1.6}
 .github-activity-row{margin-top:28px}
 .github-mark{background:#24292f;color:#fff}
+.github-activity{padding:20px 0 16px}
+.github-summary{padding:0 22px 13px}
+.github-summary>strong{font-size:16px}
+.github-settings{color:#a8a8a8;font:11px Manrope;white-space:nowrap}
+.github-panel-body{display:flex;gap:18px;padding:0 0 0 22px}
+.github-panel-body .activity-body{flex:1;min-width:0}
+.github-years{display:flex;flex:0 0 74px;flex-direction:column;gap:5px;padding-right:10px}
+.github-years button{border:0;border-radius:6px;background:transparent;color:#91a0b5;cursor:pointer;padding:10px 14px;text-align:left;font:11px "DM Mono"}
+.github-years button.active{background:#2474e8;color:#fff}
+.github-legend{display:flex;justify-content:space-between;gap:12px;color:#89909b;padding:14px 22px 0 40px;font:10px Manrope}
+.github-legend span:last-child{white-space:nowrap}
 @media (max-width:900px){.leetcode-grid{grid-template-columns:1fr}.leetcode-link-card{min-height:230px}}
-@media (max-width:560px){.leetcode-section{padding-top:0}.leetcode-activity,.leetcode-link-card{padding:14px;border-radius:8px}.activity-summary{align-items:flex-start;flex-direction:column;gap:12px}.activity-summary>strong{font-size:15px}.activity-summary>strong span{font-size:11px}.activity-stats{gap:10px;font-size:8px}.activity-grid{gap:3px}.activity-months{margin-left:32px;font-size:8px}.activity-months span:nth-child(even){visibility:hidden}.leetcode-link-card strong{font-size:25px}}
+@media (max-width:560px){.leetcode-section{padding-top:0}.leetcode-activity,.leetcode-link-card{padding:14px;border-radius:8px}.activity-summary{align-items:flex-start;flex-direction:column;gap:12px}.activity-summary>strong{font-size:15px}.activity-summary>strong span{font-size:11px}.activity-stats{gap:10px;font-size:8px}.activity-grid{gap:3px}.activity-months{margin-left:32px;font-size:8px}.activity-months span:nth-child(even){visibility:hidden}.leetcode-link-card strong{font-size:25px}.github-activity{padding:14px 0}.github-summary{padding-inline:14px}.github-panel-body{padding-left:14px;gap:8px}.github-years{flex-basis:56px;padding-right:4px}.github-years button{padding:8px 5px;font-size:9px}.github-legend{padding:12px 14px 0 32px;font-size:8px}}

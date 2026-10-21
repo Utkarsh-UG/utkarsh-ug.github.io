@@ -68,16 +68,33 @@ jobs:
           import urllib.request
           from datetime import datetime, timedelta, timezone
           from html.parser import HTMLParser
+          import re
 
           class ContributionParser(HTMLParser):
               def __init__(self):
                   super().__init__()
                   self.calendar = {}
+                  self.current_date = None
+                  self.reading_tooltip = False
 
               def handle_starttag(self, tag, attrs):
                   values = dict(attrs)
-                  if tag == "rect" and values.get("data-date") and values.get("data-count") is not None:
-                      self.calendar[values["data-date"]] = int(values["data-count"])
+                  if tag == "td" and values.get("data-date"):
+                      self.current_date = values["data-date"]
+                      self.calendar[self.current_date] = 0
+                  elif tag == "tool-tip" and self.current_date:
+                      self.reading_tooltip = True
+
+              def handle_data(self, data):
+                  if self.reading_tooltip and self.current_date:
+                      match = re.search(r"([\d,]+) contribution", data)
+                      if match:
+                          self.calendar[self.current_date] = int(match.group(1).replace(",", ""))
+
+              def handle_endtag(self, tag):
+                  if tag == "tool-tip":
+                      self.reading_tooltip = False
+                      self.current_date = None
 
           end = datetime.now(timezone.utc).date()
           start = end - timedelta(days=365)
@@ -90,6 +107,8 @@ jobs:
               markup = response.read().decode("utf-8")
           parser = ContributionParser()
           parser.feed(markup)
+          if not parser.calendar:
+              raise RuntimeError("GitHub contribution calendar was not found")
           output = {
               "username": os.environ["GITHUB_USERNAME"],
               "updatedAt": datetime.now(timezone.utc).isoformat(),
