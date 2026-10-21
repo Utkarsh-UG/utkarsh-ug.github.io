@@ -64,6 +64,7 @@ const renderActivity = (grid, submissionCalendar, prefix, noun, year) => {
     let currentStreak = 0;
     let maxStreak = 0;
     const months = new Map();
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
 
     grid.replaceChildren();
     for (let date = new Date(firstSunday); date <= end; date.setDate(date.getDate() + 1)) {
@@ -81,7 +82,13 @@ const renderActivity = (grid, submissionCalendar, prefix, noun, year) => {
       } else {
         currentStreak = 0;
       }
-      if (date.getDate() <= 7 && (!year || date.getFullYear() === year)) months.set(date.getMonth(), date.toLocaleString("en", { month: "short" }));
+      if (date.getDate() <= 7 && (!year || date.getFullYear() === year)) {
+        const week = Math.floor((date - firstSunday) / (7 * millisecondsPerDay)) + 1;
+        months.set(date.getMonth(), {
+          label: date.toLocaleString("en", { month: "short" }),
+          week
+        });
+      }
       const cell = document.createElement("i");
       const level = count === 0 ? 0 : count === 1 ? 1 : count <= 3 ? 2 : count <= 6 ? 3 : 4;
       cell.className = "activity-cell";
@@ -101,9 +108,12 @@ const renderActivity = (grid, submissionCalendar, prefix, noun, year) => {
     const monthLabels = grid.closest(".leetcode-activity").querySelector(".activity-months");
     if (monthLabels) {
       monthLabels.replaceChildren();
-      months.forEach((label) => {
+      const weekCount = Math.ceil((end - firstSunday) / (7 * millisecondsPerDay));
+      monthLabels.style.gridTemplateColumns = `repeat(${weekCount}, minmax(0, 1fr))`;
+      months.forEach(({ label, week }) => {
         const month = document.createElement("span");
         month.textContent = label;
+        month.style.gridColumn = String(week);
         monthLabels.appendChild(month);
       });
     }

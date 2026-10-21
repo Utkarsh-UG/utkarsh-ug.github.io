@@ -131,7 +131,7 @@ body{min-width:320px}
 .activity-stats{align-items:center;gap:20px;color:#b5b5b5;font:10px "DM Mono";display:flex;white-space:nowrap}
 .activity-stats b{color:#e8e8e8;font-weight:500}
 .activity-stats select{appearance:none;color:#eee;background:#414141;border:0;border-radius:3px;padding:8px 27px 8px 12px;font:10px "DM Mono"}
-.activity-months{grid-template-columns:repeat(12,1fr);margin:0 0 7px 34px;color:#a8a8a8;font:12px Manrope;display:grid}
+.activity-months{margin:0 0 7px 34px;color:#a8a8a8;font:12px Manrope;display:grid}
 .activity-months span{text-align:center}
 .activity-body{display:flex;gap:10px}
 .activity-days{color:#888;flex:0 0 24px;flex-direction:column;justify-content:space-around;padding:3px 0 2px;font:9px "DM Mono";display:flex}
