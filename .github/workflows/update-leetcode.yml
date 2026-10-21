@@ -1,0 +1,64 @@
+name: Update LeetCode activity
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/update-leetcode.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch LeetCode submission calendar
+        env:
+          LEETCODE_USERNAME: GRANDx47
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+          from datetime import datetime, timezone
+
+          query = {
+              "query": """
+                query userCalendar($username: String!) {
+                  matchedUser(username: $username) {
+                    submissionCalendar
+                  }
+                }
+              """,
+              "variables": {"username": os.environ["LEETCODE_USERNAME"]}
+          }
+          request = urllib.request.Request(
+              "https://leetcode.com/graphql",
+              data=json.dumps(query).encode(),
+              headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              payload = json.load(response)
+          calendar = payload["data"]["matchedUser"]["submissionCalendar"]
+          output = {
+              "username": os.environ["LEETCODE_USERNAME"],
+              "updatedAt": datetime.now(timezone.utc).isoformat(),
+              "submissionCalendar": json.loads(calendar or "{}")
+          }
+          with open("data/leetcode.json", "w", encoding="utf-8") as file:
+              json.dump(output, file, indent=2)
+              file.write("\n")
+          PY
+
+      - name: Commit updated activity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/leetcode.json
+          git diff --cached --quiet || git commit -m "Update LeetCode activity"
+          git push
