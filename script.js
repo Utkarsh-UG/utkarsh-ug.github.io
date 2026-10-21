@@ -61,10 +61,26 @@ if (leetcodeGrid) {
     const firstSunday = new Date(start);
     firstSunday.setDate(firstSunday.getDate() - firstSunday.getDay());
 
+    let total = 0;
+    let activeDays = 0;
+    let currentStreak = 0;
+    let maxStreak = 0;
+    const months = new Map();
+
     leetcodeGrid.replaceChildren();
     for (let date = new Date(firstSunday); date <= end; date.setDate(date.getDate() + 1)) {
       const timestamp = Math.floor(date.getTime() / 1000);
       const count = Number(submissionCalendar[String(timestamp)] || 0);
+      const dateKey = date.toISOString().slice(0, 10);
+      total += count;
+      activeDays += count > 0 ? 1 : 0;
+      if (count > 0) {
+        currentStreak += 1;
+        maxStreak = Math.max(maxStreak, currentStreak);
+      } else {
+        currentStreak = 0;
+      }
+      if (date.getDate() <= 7) months.set(date.getMonth(), date.toLocaleString("en", { month: "short" }));
       const cell = document.createElement("i");
       const level = count === 0 ? 0 : count === 1 ? 1 : count <= 3 ? 2 : count <= 6 ? 3 : 4;
       cell.className = "activity-cell";
@@ -72,6 +88,23 @@ if (leetcodeGrid) {
       cell.title = `${count} submission${count === 1 ? "" : "s"} on ${date.toLocaleDateString()}`;
       cell.setAttribute("aria-hidden", "true");
       leetcodeGrid.appendChild(cell);
+    }
+
+    const totalElement = document.getElementById("leetcode-total");
+    const activeDaysElement = document.getElementById("leetcode-active-days");
+    const maxStreakElement = document.getElementById("leetcode-max-streak");
+    if (totalElement) totalElement.firstChild.textContent = `${total} `;
+    if (activeDaysElement) activeDaysElement.textContent = String(activeDays);
+    if (maxStreakElement) maxStreakElement.textContent = String(maxStreak);
+
+    const monthLabels = document.querySelector(".activity-months");
+    if (monthLabels) {
+      monthLabels.replaceChildren();
+      months.forEach((label) => {
+        const month = document.createElement("span");
+        month.textContent = label;
+        monthLabels.appendChild(month);
+      });
     }
   };
 
