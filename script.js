@@ -108,7 +108,7 @@ const renderActivity = (grid, submissionCalendar, prefix, noun, year) => {
     const monthLabels = grid.closest(".leetcode-activity").querySelector(".activity-months");
     if (monthLabels) {
       monthLabels.replaceChildren();
-      const weekCount = Math.ceil((end - firstSunday) / (7 * millisecondsPerDay));
+      const weekCount = Math.floor((end - firstSunday) / (7 * millisecondsPerDay)) + 1;
       monthLabels.style.gridTemplateColumns = `repeat(${weekCount}, minmax(0, 1fr))`;
       months.forEach(({ label, week }) => {
         const month = document.createElement("span");
